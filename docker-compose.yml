@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: always
+
+# Untuk development dengan hot-reload, biasanya menggunakan volume mapping
+# Namun Dockerfile di atas disetel untuk production build.
