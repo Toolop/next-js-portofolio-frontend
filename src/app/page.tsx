@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center pb-20">
       {/* Hero Section */}
-      <section className="relative w-full h-[90vh] flex items-center justify-center overflow-hidden bg-background">
+      <section id="home" className="relative w-full h-[90vh] flex items-center justify-center overflow-hidden bg-background">
         <Spotlight
           className="-top-40 left-0 md:left-60 md:-top-20"
           fill="white"
@@ -50,7 +50,7 @@ export default function Home() {
       </section>
 
       {/* About Section - Bento Grid */}
-      <section id="about" className="py-24 container px-4">
+      <section id="skills" className="py-24 container px-4">
         <h2 className="text-3xl md:text-5xl font-bold mb-12 text-center tracking-tight">About Experience</h2>
         <BentoGrid className="max-w-4xl mx-auto">
           <BentoGridItem
