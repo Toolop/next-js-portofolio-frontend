@@ -269,8 +269,6 @@ export const HeroSection = () => {
 
         </div>
 
-        {/* Scroll Indicator */}
-
         {/* Social Bar */}
         <motion.div className="relative">
           <motion.div variants={fadeIn} className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.1)] w-full flex items-center gap-6">

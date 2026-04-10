@@ -1,33 +1,53 @@
-import React from "react";
-import { portfolioData } from "@/data/portfolio";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { fetchHeroData, HeroData } from "@/data/mockApi";
+import { Instagram, Youtube, Facebook, Linkedin } from "lucide-react";
+
+const platformIcons: Record<string, React.ReactNode> = {
+  instagram: <Instagram className="w-5 h-5" />,
+  youtube: <Youtube className="w-5 h-5" />,
+  facebook: <Facebook className="w-5 h-5" />,
+  linkedin: <Linkedin className="w-5 h-5" />,
+};
 
 export const Footer = () => {
+  const [data, setData] = useState<HeroData | null>(null);
+
+  useEffect(() => {
+    fetchHeroData().then(setData);
+  }, []);
+
+  if (!data) return null;
+
   return (
-    <footer className="border-t bg-background">
-      <div className="container py-8 md:py-12">
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            Built by {portfolioData.name}. The source code is available on{" "}
-            <a
-              href={portfolioData.contact.github}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              GitHub
-            </a>
-            .
-          </p>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <a href={portfolioData.contact.linkedin} target="_blank" rel="noreferrer" className="hover:text-primary">
-              LinkedIn
-            </a>
-            <a href={portfolioData.contact.twitter} target="_blank" rel="noreferrer" className="hover:text-primary">
-              Twitter
-            </a>
-            <a href={`mailto:${portfolioData.contact.email}`} className="hover:text-primary">
-              Email
-            </a>
+    <footer className="bg-[#0b1424] py-8 border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          {/* Name */}
+          <div className="text-white font-bold tracking-tighter uppercase text-sm">
+            {data.name.replace("I am ", "")}
+          </div>
+
+          {/* Socials */}
+          <div className="flex items-center gap-6">
+            {data.socials.map((social) => (
+              <a
+                key={social.platform}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-400 hover:text-[#81ECFF] transition-colors"
+                title={social.platform}
+              >
+                {platformIcons[social.platform.toLowerCase()] || social.platform}
+              </a>
+            ))}
+          </div>
+
+          {/* Copyright */}
+          <div className="text-neutral-500 text-[10px] tracking-widest uppercase font-mono">
+            © 2026 {data.name.replace("I am ", "")}
           </div>
         </div>
       </div>
