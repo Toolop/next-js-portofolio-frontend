@@ -18,6 +18,14 @@ export interface HeroData {
   }[];
 }
 
+export interface WorkHistoryData {
+  id: number;
+  year: string;
+  role: string;
+  company: string;
+  description: string;
+}
+
 export async function fetchHeroData(): Promise<HeroData> {
   // Simulate network delay (300ms)
   await new Promise((r) => setTimeout(r, 300));
@@ -56,3 +64,36 @@ export async function fetchHeroData(): Promise<HeroData> {
     ],
   };
 }
+
+export async function fetchWorkHistory(): Promise<WorkHistoryData[]> {
+  // Simulate network delay (500ms)
+  await new Promise((r) => setTimeout(r, 500));
+
+  return [
+    {
+      id: 1,
+      year: "2022 — PRES",
+      role: "LEAD SYSTEMS DESIGNER",
+      company: "NEO-TOKYO DYNAMICS",
+      description:
+        "Orchestrating large-scale design systems for autonomous transit interfaces. Focused on high-contrast accessibility and real-time data visualization.",
+    },
+    {
+      id: 2,
+      year: "2020 — 2022",
+      role: "SENIOR UI SPECIALIST",
+      company: "VOID INTERACTIVE",
+      description:
+        "Developed the core visual language for award-winning industrial simulations. Managed a team of 12 designers across three continents.",
+    },
+    {
+      id: 3,
+      year: "2018 — 2020",
+      role: "VISUAL DESIGNER",
+      company: "MONOLITH STUDIO",
+      description:
+        "Early-stage product design and branding for hardware-integrated software solutions.",
+    },
+  ];
+}
+
