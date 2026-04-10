@@ -186,24 +186,30 @@ export const HeroSection = () => {
 
             {/* CTA Buttons */}
             <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 mt-4 w-full sm:w-auto">
-              <Link href="#work" passHref legacyBehavior>
-                <motion.a
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="rounded px-8 py-3.5 bg-[#81ECFF] text-[#020201] text-xs sm:text-sm font-bold tracking-widest shrink-0 transition-colors hover:bg-white"
-                >
-                  SEE MY WORK
-                </motion.a>
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              className="shrink-0"
+            >
+              <Link
+                href="#work"
+                className="rounded px-8 py-3.5 bg-[#81ECFF] text-[#020201] text-xs sm:text-sm font-bold tracking-widest transition-colors hover:bg-white inline-block w-full text-center"
+              >
+                SEE MY WORK
               </Link>
-              <Link href="#contact" passHref legacyBehavior>
-                <motion.a
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="rounded px-8 py-3.5 border border-[rgba(255,255,255,0.3)] text-white text-xs sm:text-sm font-bold tracking-widest shrink-0 transition-colors hover:border-[#81ECFF] hover:bg-[rgba(129,236,255,0.05)]"
-                >
-                  GET IN TOUCH
-                </motion.a>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              className="shrink-0"
+            >
+              <Link
+                href="#contact"
+                className="rounded px-8 py-3.5 border border-[rgba(255,255,255,0.3)] text-white text-xs sm:text-sm font-bold tracking-widest transition-colors hover:border-[#81ECFF] hover:bg-[rgba(129,236,255,0.05)] inline-block w-full text-center"
+              >
+                GET IN TOUCH
               </Link>
+            </motion.div>
             </motion.div>
           </motion.div>
 
@@ -273,14 +279,19 @@ export const HeroSection = () => {
         <motion.div className="relative">
           <motion.div variants={fadeIn} className="mt-8 pt-6 border-t border-[rgba(255,255,255,0.1)] w-full flex items-center gap-6">
             {data.socials.map((social) => (
-              <Link key={social.platform} href={social.url} target="_blank" rel="noopener noreferrer">
+              <a 
+                key={social.platform} 
+                href={social.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
                 <motion.div
                   whileHover={{ scale: 1.1, color: "#81ECFF" }}
                   className="text-[rgba(255,255,255,0.5)] transition-colors"
                 >
                   {getPlatformIcon(social.platform)}
                 </motion.div>
-              </Link>
+              </a>
             ))}
           </motion.div>
           <motion.div

@@ -111,7 +111,7 @@ export const Navbar = () => {
             gap: isScrolled ? "36px" : "24px",
             backgroundColor: isScrolled
               ? "rgba(129,236,255,0.04)"
-              : "transparent",
+              : "rgba(129,236,255,0)",
             boxShadow: isScrolled
               ? "0 0 24px rgba(129,236,255,0.06)"
               : "none",
