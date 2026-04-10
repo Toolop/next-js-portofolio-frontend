@@ -97,3 +97,95 @@ export async function fetchWorkHistory(): Promise<WorkHistoryData[]> {
   ];
 }
 
+export interface ProjectData {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  tags: string[];
+  link: string;
+}
+
+export interface CertificationData {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface SkillCategory {
+  category: string;
+  items: string[];
+}
+
+export async function fetchProjects(): Promise<ProjectData[]> {
+  await new Promise((r) => setTimeout(r, 400));
+  return [
+    {
+      id: 1,
+      title: "NEON WALLET",
+      description: "A high-performance crypto-wallet built with React Native and Rust cores.",
+      image: "/projects/wallet.png",
+      category: "MOBILE APP",
+      tags: ["REACT NATIVE", "RUST", "WEB3.JS"],
+      link: "#",
+    },
+    {
+      id: 2,
+      title: "OBSIDIAN MESH",
+      description: "Full-stack industrial monitoring platform connecting 500+ ESP32 nodes.",
+      image: "/projects/mesh.png",
+      category: "IOT / HARDWARE",
+      tags: ["MQTT", "GO", "THREE.JS"],
+      link: "#",
+    },
+    {
+      id: 3,
+      title: "QUBIT ENGINE",
+      description: "A distributed computing framework optimized for ARM-based edge devices.",
+      image: "/projects/engine.png",
+      category: "SYSTEM DEV",
+      tags: ["C++20", "ARM ASSEMBLY", "DOCKER"],
+      link: "#",
+    },
+  ];
+}
+
+export async function fetchCertifications(): Promise<CertificationData[]> {
+  await new Promise((r) => setTimeout(r, 400));
+  return [
+    {
+      id: "952-UX",
+      title: "GOOGLE UX PROFESSIONAL",
+      description: "Advanced methodology and user-centric systems architecture.",
+    },
+    {
+      id: "SEC-381",
+      title: "ETHICAL DESIGN LEAD",
+      description: "Certification in dark-pattern prevention and cognitive accessibility.",
+    },
+    {
+      id: "DEV-X-1",
+      title: "REACT ARCHITECTURE",
+      description: "Mastery of component lifecycle and performance optimization.",
+    },
+  ];
+}
+
+export async function fetchSkills(): Promise<SkillCategory[]> {
+  await new Promise((r) => setTimeout(r, 400));
+  return [
+    {
+      category: "Frontend",
+      items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Three.js"],
+    },
+    {
+      category: "Backend",
+      items: ["Node.js", "Go", "PostgreSQL", "MQTT", "C++"],
+    },
+    {
+      category: "Tools",
+      items: ["Docker", "Git", "Framer Motion", "Unity", "Figma"],
+    },
+  ];
+}
