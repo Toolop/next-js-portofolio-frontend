@@ -20,7 +20,6 @@ describe("authService", () => {
       });
 
       expect(result.success).toBe(true);
-      expect(result.token).toBe("fake-token");
     });
 
     it("should return error when login fails", async () => {

@@ -1,5 +1,7 @@
-import { BASE_URL } from "@/lib/config/api";
 import { z } from "zod";
+
+// Call local API routes (BFF pattern)
+const AUTH_API_URL = "/api/auth";
 
 export const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -20,13 +22,12 @@ export interface AuthResponse {
   success: boolean;
   message: string;
   data?: any;
-  token?: string;
 }
 
 export const authService = {
   async register(data: RegisterData): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${BASE_URL}/users/register`, {
+      const response = await fetch(`${AUTH_API_URL}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,26 +40,27 @@ export const authService = {
       if (!response.ok) {
         return {
           success: false,
-          message: result.message || "Registration failed",
+          message: result.message || "Registration failed. Please check your data.",
         };
       }
 
       return {
         success: true,
-        message: "Registration successful",
+        message: result.message || "Registration successful",
         data: result.data,
       };
     } catch (error) {
+      console.error("Register Service Error:", error);
       return {
         success: false,
-        message: "Network error, please try again later",
+        message: error instanceof TypeError ? "Connection error. Please check your internet." : "An unexpected error occurred.",
       };
     }
   },
 
   async login(data: LoginData): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${BASE_URL}/users/login`, {
+      const response = await fetch(`${AUTH_API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,22 +73,25 @@ export const authService = {
       if (!response.ok) {
         return {
           success: false,
-          message: result.message || "Login failed",
+          message: result.message || "Login failed. Invalid credentials.",
         };
       }
 
-      // Security: Handle token storage safely (should be in Cookie for production)
-      // For this implementation, we return it for the caller to handle
       return {
         success: true,
-        message: "Login successful",
-        token: result.token || result.data?.token,
+        message: result.message || "Login successful. Redirecting...",
       };
     } catch (error) {
+      console.error("Login Service Error:", error);
       return {
         success: false,
-        message: "Network error, please try again later",
+        message: error instanceof TypeError ? "Connection error. Please check your internet." : "An unexpected error occurred.",
       };
     }
   },
+
+  async logout(): Promise<void> {
+    // We'll implement a logout API route next turn to clear the cookie
+    await fetch(`${AUTH_API_URL}/logout`, { method: "POST" });
+  }
 };
