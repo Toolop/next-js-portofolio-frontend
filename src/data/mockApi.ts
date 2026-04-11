@@ -189,3 +189,27 @@ export async function fetchSkills(): Promise<SkillCategory[]> {
     },
   ];
 }
+
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  token?: string;
+}
+
+export async function login(accessKey: string, encryptionPhrase: string): Promise<LoginResponse> {
+  // Simulate network delay
+  await new Promise((r) => setTimeout(r, 1500));
+
+  if (accessKey === "admin" && encryptionPhrase === "password123") {
+    return {
+      success: true,
+      message: "IDENTITY VERIFIED. ACCESS GRANTED.",
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    };
+  }
+
+  return {
+    success: false,
+    message: "ACCESS DENIED. INVALID CREDENTIALS.",
+  };
+}

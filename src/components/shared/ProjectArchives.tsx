@@ -8,7 +8,7 @@ const WorkHistoryItem = ({ data, isActive }: { data: WorkHistoryData; isActive: 
   return (
     <motion.div
       initial={{ opacity: 0.3 }}
-      animate={{ 
+      animate={{
         opacity: isActive ? 1 : 0.3,
         scale: isActive ? 1 : 0.98
       }}
@@ -56,7 +56,7 @@ export default function ProjectArchives() {
 
   useEffect(() => {
     const observers = new Map();
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -89,21 +89,21 @@ export default function ProjectArchives() {
 
         <div className="space-y-0">
           {workHistory.map((item, index) => (
-            <div 
-              key={item.id} 
-              data-work-item 
+            <div
+              key={item.id}
+              data-work-item
               data-index={index}
               className="relative"
             >
-              <WorkHistoryItem 
-                data={item} 
-                isActive={activeIndex === index} 
+              <WorkHistoryItem
+                data={item}
+                isActive={activeIndex === index}
               />
             </div>
           ))}
         </div>
       </div>
-      
+
       {/* Spacer to allow scrolling the last item into the center */}
       <div className="h-[40vh]" />
     </section>
