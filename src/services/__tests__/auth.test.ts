@@ -1,4 +1,4 @@
-const { authService } = require("../auth");
+import { authService } from "../auth";
 
 global.fetch = jest.fn();
 

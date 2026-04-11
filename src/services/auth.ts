@@ -1,6 +1,5 @@
+import { BASE_URL } from "@/lib/config/api";
 import { z } from "zod";
-
-const BASE_URL = "https://api-portofolio.declarationdigital.tech";
 
 export const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
