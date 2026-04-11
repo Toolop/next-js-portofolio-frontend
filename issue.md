@@ -1,74 +1,74 @@
-# Issue: Implementasi Sistem Login (CMS Security Layer)
+# Issue: Pembuatan Halaman /register dan Integrasi API Authentication (Login & Register)
 
 ## Deskripsi Tugas
-Tugas ini fokus untuk membangun halaman otentikasi (login) khusus bernama "SYSTEM_ACCESS_PORTAL" yang digunakan sebagai gerbang keamanan (Security Layer) menuju sistem CMS. Antarmuka harus mengusung tema *high-tech / cyberpunk* gelap seperti yang telah kita gunakan di halaman utama, dengan animasi interaktif yang elegan.
+Tugas ini memiliki dua tujuan utama:
+1. **Membuat halaman `/register`** dari awal dan mengintegrasikannya dengan API API registrasi.
+2. **Mengintegrasikan halaman `/login`** yang sudah ada (atau membuat jika belum siap) dengan API API login.
 
----
+Pastikan dalam pengerjaannya memperhatikan standar keamanan (*security best practices*). Termasuk dalam tugas ini adalah menyiapkan kerangka pengujian terotomatisasi (*Unit Test* dan *UI Test*) berdasarkan skenario yang telah ditentukan.
 
-## Spesifikasi Desain (Berdasarkan Rekapan Gambar Referensi)
-**1. Tampilan Latar & Layout (Background)**
-- **Warna Dasar**: Gelap pekat (`#020201` atau `#000000`).
-- **Ornamen Layout**: Tambahkan bingkai/sudut penanda (*corner markers*) berbentuk garis siku tipis di keempat sudut layar (mengambang absolut).
-- **Efek Pendaran**: Terdapat efek cahaya (*glow*) berwarna *cyan/teal* yang membias sangat halus di belakang form login.
+## Rincian API
+Integrasikan form di kedua halaman tersebut dengan endpoint API berikut. Pastikan selalu menggunakan protokol HTTPS (tambahkan "https://" pada base URL).
 
-**2. Tipografi (Typography)**
-- **Judul**: `SYSTEM_ACCESS_PORTAL` (Warna cyan, tebal).
-- **Sub-judul**: `KINETIC GRID CMS SECURITY LAYER` (Warna teks lebih redup, huruf kecil ter-*uppercase*, spasi lebar / *tracking-widest*).
-- Font yang digunakan mengikuti sistem global (`Space Grotesk`).
+### 1. API Registrasi
+Digunakan pada halaman `/register` untuk mendaftarkan akun pengguna baru.
+**Endpoint:**
+```http
+POST https://api-portofolio.declarationdigital.tech/users/register
+Content-Type: application/json
+```
+**Payload Request:**
+```json
+{
+    "name": "John Doe",
+    "username": "johndoe",
+    "email": "johndoe@example.com",
+    "password": "password"
+}
+```
 
-**3. Form Login Layout (Card)**
-- **Form Card**: Latar sangat gelap (misalnya `#0a0a0a`), tanpa border terang kecuali sedikit iluminasi lembut saat di-*hover*.
-- **Input 1 (ACCESS_KEY)**: 
-  - Teks Label: `ACCESS_KEY`
-  - Input field berwarna nyaris hitam, dengan *icon* *fingerprint* / user di sebelah kiri.
-  - Placeholder: `Enter primary identity string`
-- **Input 2 (ENCRYPTION_PHRASE)**: 
-  - Teks Label: `ENCRYPTION_PHRASE`
-  - Input field (bertipe `password`) berlatar sangat gelap, dengan *icon* kunci (key) di sebelah kiri.
-  - Placeholder: `••••••••••••`
-- **Tombol Submit (VERIFY IDENTITY)**:
-  - Tombol blok *full-width*. Latar cyan solid pekat (`#81ECFF` atau `#00e5ff`), warna teks hitam/pekat.
-  - Terdapat ikon panah ke kanan (→) di samping label tombol.
-- **Micro-footer Form**:
-  - Kolom kiri: Link teks abu-abu redup berisi "REQUEST RESET".
-  - Kolom kanan: Indikator status berisi ikon titik (dot) *cyan* kecil dan teks "SECURE_NODE: ACTIVE".
+### 2. API Login
+Digunakan pada halaman `/login` untuk proses otentikasi.
+**Endpoint:**
+```http
+POST https://api-portofolio.declarationdigital.tech/users/login
+Content-Type: application/json
+```
+**Payload Request:**
+```json
+{
+  "email": "johndoe@example.com",
+  "password": "password"
+}
+```
 
-**4. Interaksi & Animasi (Framer Motion Wajib)**
-- Gunakan `framer-motion` untuk menganimasikan kemunculan elemen.
-- Form card *Fade-in* & *Slide-up* perlahan dari bawah ke tengah layar saat *render* pertama.
-- Ketika *input field* di-klik (focus), berikan pendaran halus (`box-shadow glow`) berwarna *cyan* di border-nya.
-- Efek *hover* pada tombol (sedikit membesar atau *brightness* meningkat).
+## Syarat Keamanan (Security Requirements)
+Untuk menjamin keamanan aplikasi, pastikan implementasi Anda mencakup aspek berikut:
+1. **Validasi Input Klien:** Pastikan data tervalidasi menggunakan skema validasi (misalnya Zod) sebelum data dikirimkan. Cek format email dan pastikan password memenuhi kriteria minimal dan tidak kosong.
+2. **Pesan Kesalahan Generik (Error Handling):** Jika request gagal akibat kredensial/data yang salah, jangan tampilkan stack trace atau detail error mentah dari server. Gunakan pesan yang ramah pengguna seperti "Email atau password yang Anda masukkan salah" atau "Email sudah terdaftar, mohon gunakan layanan Login" jika error 400 dilontarkan.
+3. **Pengelolaan State & Proteksi Double Submit:** Kunci (disable) tombol "Submit" selama request ke backend sedang berjalan untuk mencegah serangan *brute force* di sisi klien dan redundansi pemanggilan API.
+4. **Keamanan Penyimpanan Token (Jika Menggunakan Token):** Apabila API mengembalikan token (seperti JWT auth), sangat direkomendasikan menyimpannya di lapisan Cookie berbasis `httpOnly` dan `Secure`. Sebisa mungkin hindari penyimpanan parameter sesi atau kredensial langsung pada `localStorage` demi memitigasi serangan pencurian sesi melalui *Cross-Site Scripting (XSS)*.
+5. **Hindari XSS pada UI:** Selalu hindari merender HTML secara langsung tanpa pengamanan (*escaping*) dari data balasan server (misal saat merender teks error respons UI dari API).
 
----
+## Skenario Pengujian (Testing Scenarios)
+Tulis *Unit Test* dan *UI/E2E Test* untuk integrasi di halaman `/login` dan `/register`. Jangan merencanakan interaksi testing-nya terlalu mendetail baris-demi-baris, namun pastikan pengujian meliputi seluruh skenario krusial berikut:
 
-## Tahapan Implementasi
+### 1. Skenario Unit Test (Logical API / Service Layer)
+*   **Skenario Keberhasilan API:** Memastikan logic service API dapat dengan sukses merangkai payload request POST dengan format JSON yang sesuai kontrak dan mengembalikan balasan *response* secara sukses (kode `200` atau `201`).
+*   **Skenario Penolakan (*Rejection/Invalid*):** Memastikan konektor service melontarkan (*throws*) ralat/custom error secara presisi ketika server menangani respons kegagalan (kode `400` Validasi maupun error `401` Unauthorized).
+*   **Skenario Kegagalan Jaringan/Server:** Memastikan alur tertangani secara tidak fatal ketika terjadi *timeout*, API merespons `500 Internal Server Error`, atu putus sambungan *offline*.
 
-Untuk kamu yang akan mengimplementasikan ini (Developer/AI), silakan ikuti langkah berurutan di bawah ini:
+### 2. Skenario UI Test (Interaksi Komponen Login)
+*   **Render Integritas Form:** Memastikan seluruh field input yang dibutuhkan (nama, username, email, password untuk `/register`, serta email, password untuk `/login`), label, dan tombol Submit dirender semestinya.
+*   **Aksi Submit dengan Isian Tidak Valid:** Menyimulasikan penekanan tombol Submit tatkala user belum mengisi apa-apa atau emailnya berupa isian *typo*. Uji bahwa akan bermunculan alert validasi form dan hal form tidak *trigger* POST API apa pun.
+*   **Aksi Submit dalam Proses:** Menyimulasikan *flow loading* yakni ada penanda visual *loader* pada tombol/form disaat menunggu jawaban API, dengan kondisi disabled agar tak terklik berkali-kali.
+*   **Aksi Ketika Gagal Autentikasi / Registrasi:** Menyimulasikan jawaban negatif berupa `Mock` data error dari API. Pastikan notifikasi / *toast* error termuncul di user interface secara elegan.
+*   **Aksi Sukses Terotentikasi (*Redirect*):** Menyetel rekayasa keberhasilan dan verfikasi *hook* navigasi untuk mengarahkan pengguna secara otomatis sesaat setelah registrasi atau login berhasil di-POST. (misalnya diteruskan ke halaman Dasbor beranda atau rujukan login).
 
-### Fase 1: Setup Routing
-1. Buat folder baru `login` di dalam folder `src/app/`.
-2. Di dalam folder `login`, buat file `page.tsx` (`src/app/login/page.tsx`).
-3. Set file ini sebagai Client Component dengan menambahkan `"use client";` di baris pertama.
-
-### Fase 2: Implementasi Layout Dasar
-1. Pastikan layout utama halaman login membentang sepenuh layar (`min-h-screen`, `flex`, `items-center`, `justify-center`, warna *background* gelap pekat).
-2. Buat ornamen 4 sudut (*corner markers*) menggunakan div absolut dengan perbatasan (border) *cyan*/putih transparan di ujung kiri-atas, kanan-atas, kiri-bawah, dan kanan-bawah.
-3. Sisipkan gradasi radial halus (radial-gradient) tepat di tengah layar di bawah posisi form nanti.
-
-### Fase 3: Struktur Form Card dan Styling
-1. Strukturkan form di dalam sebuah *container* (misalnya `max-w-md w-full`).
-2. Masukkan Judul & Sub-judul.
-3. Buat kerangka Input (Label -> Kontainer Input -> Icon & Teks Field). Anda bisa menggunakan *inline-svg* atau `lucide-react`. (Saran ikon: `<Fingerprint />` atau `<User />` untuk input pertama, `<Key />` untuk input kedua).
-4. Pastikan form input membuang styling *default browser* (seperti efek *ring* bawaan) dan gunakan sistem gaya *focus-within:border-[#81ECFF]* milik Tailwind.
-
-### Fase 4: Tombol & Micro-Footer
-1. Buat elemen tombol dengan gaya menyala. Gunakan *Lucide icon* `<ArrowRight />` berukuran proporsional.
-2. Tambahkan tata letak Footer bawah card menggunakan `flex justify-between`. Beri elemen lingkaran kecil (dot) berkedip. Anda bisa menganimasikan dot ini dengan varian berulang `opacity: [1, 0.5, 1]` via framer-motion.
-
-### Fase 5: Pembungkusan Animasi
-1. Bungkus *card form* menggunakan komponen `<motion.div>`.
-2. Tentukan properti `initial={{ opacity: 0, y: 20 }}` dan `animate={{ opacity: 1, y: 0 }}`.
-3. Berikan *stagger* transisi apabila ingin komponen form (input, tombol) muncul perlahan secara bertahap satu persatu.
-
----
-Silakan lakukan pengerjaan dengan cermat dan rapi, mengacu pada struktur CSS Global Tailwind yang sudah terbangun. Catat bahwa ini murni implementasi *frontend/UI* terlebih dahulu (tanpa mempedulikan fungsionalitas HTTP POST).
+## Kriteria Penerimaan (Acceptance Criteria)
+- [ ] Tersedianya komponen komponen halaman muka (UI view) di alur `/register` yang bersih.
+- [ ] Implementasi integrasi API form POST pada `/users/register` dirangkaikan aman.
+- [ ] Implementasi integrasi API form POST pada `/users/login` dirangkaikan aman.
+- [ ] Pengelolaan *load UI status* (disable btn loader) serta penanganan notifikasi kesalahan taktisnya bekerja konsisten dan ramah kustomer.
+- [ ] Script unit test dirancang khusus untuk memvalidasi lapisan komunikasi fungsional HTTP respons sukses dan tak ter-otorisasi.
+- [ ] Cakupan *UI test scenarios* meliputi penyisiran isian tidak komplet, error handling mock network, serta penyelesaian rute sukses ke laman pasca-login.

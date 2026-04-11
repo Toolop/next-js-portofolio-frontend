@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginData, authService } from "@/services/auth";
+import { registerSchema, RegisterData, authService } from "@/services/auth";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState<{ success: boolean; message: string } | null>(null);
   const router = useRouter();
@@ -17,24 +17,22 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterData>({
+    resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: LoginData) => {
+  const onSubmit = async (data: RegisterData) => {
     setIsLoading(true);
     setApiResponse(null);
 
-    const res = await authService.login(data);
+    const res = await authService.register(data);
     setApiResponse(res);
     setIsLoading(false);
 
     if (res.success) {
-      // Security: In a real app, store token in cookies safely
-      // For now, we just proceed to home
       setTimeout(() => {
-        router.push("/");
-      }, 1500);
+        router.push("/login");
+      }, 2000);
     }
   };
 
@@ -53,7 +51,7 @@ export default function LoginPage() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="w-full max-w-[440px] relative z-10"
+        className="w-full max-w-[480px] relative z-10"
       >
         {/* Header */}
         <div className="text-center mb-10">
@@ -63,7 +61,7 @@ export default function LoginPage() {
             transition={{ delay: 0.2 }}
             className="text-[#81ECFF] text-2xl md:text-3xl font-black tracking-tighter mb-2"
           >
-            SYSTEM_ACCESS_PORTAL
+            CREATE_SECURE_IDENTITY
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -71,7 +69,7 @@ export default function LoginPage() {
             transition={{ delay: 0.3 }}
             className="text-neutral-500 text-[10px] tracking-[0.3em] font-bold uppercase"
           >
-            KINETIC GRID CMS SECURITY LAYER
+            ESTABLISH NEW PROTOCOL ACCESS
           </motion.p>
         </div>
 
@@ -84,54 +82,80 @@ export default function LoginPage() {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-[#81ECFF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-          <form onSubmit={handleSubmit(onSubmit)} className="relative z-10 space-y-8">
-            {/* Email Input */}
-            <div className="space-y-3">
-              <label className="text-neutral-500 text-[10px] font-bold tracking-widest uppercase block">
-                ACCESS_IDENTITY
-              </label>
-              <div className="relative group/input">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within/input:text-[#81ECFF] transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 11c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/><path d="M18 10a8 8 0 1 0-16 0"/><circle cx="12" cy="10" r="3"/><path d="M7 20c0-1.5 1-3.5 5-3.5s5 2 5 3.5"/><path d="M15.5 2h.5a2 2 0 0 1 2 2v2"/><path d="M8.5 2H8a2 2 0 0 0-2 2v2"/>
-                  </svg>
-                </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="relative z-10 space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Name Input */}
+              <div className="space-y-2">
+                <label className="text-neutral-500 text-[10px] font-bold tracking-widest uppercase block">
+                  FULL_NAME
+                </label>
                 <input
-                  {...register("email")}
-                  type="email"
-                  placeholder="Enter primary identity email"
-                  className="w-full bg-black border border-white/10 rounded-sm py-4 pl-12 pr-4 text-sm text-neutral-200 placeholder:text-neutral-700 focus:outline-none focus:border-[#81ECFF]/50 focus:ring-1 focus:ring-[#81ECFF]/20 transition-all"
+                  {...register("name")}
+                  type="text"
+                  placeholder="John Doe"
+                  className="w-full bg-black border border-white/10 rounded-sm py-3 px-4 text-sm text-neutral-200 placeholder:text-neutral-700 focus:outline-none focus:border-[#81ECFF]/50 transition-all"
                   disabled={isLoading}
                 />
+                {errors.name && (
+                  <p className="text-red-500 text-[9px] font-bold tracking-tight uppercase">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
+
+              {/* Username Input */}
+              <div className="space-y-2">
+                <label className="text-neutral-500 text-[10px] font-bold tracking-widest uppercase block">
+                  USERNAME
+                </label>
+                <input
+                  {...register("username")}
+                  type="text"
+                  placeholder="johndoe"
+                  className="w-full bg-black border border-white/10 rounded-sm py-3 px-4 text-sm text-neutral-200 placeholder:text-neutral-700 focus:outline-none focus:border-[#81ECFF]/50 transition-all"
+                  disabled={isLoading}
+                />
+                {errors.username && (
+                  <p className="text-red-500 text-[9px] font-bold tracking-tight uppercase">
+                    {errors.username.message}
+                   </p>
+                )}
+              </div>
+            </div>
+
+            {/* Email Input */}
+            <div className="space-y-2">
+              <label className="text-neutral-500 text-[10px] font-bold tracking-widest uppercase block">
+                EMAIL_ADDRESS
+              </label>
+              <input
+                {...register("email")}
+                type="email"
+                placeholder="identity@network.hub"
+                className="w-full bg-black border border-white/10 rounded-sm py-3 px-4 text-sm text-neutral-200 placeholder:text-neutral-700 focus:outline-none focus:border-[#81ECFF]/50 transition-all"
+                disabled={isLoading}
+              />
               {errors.email && (
-                <p className="text-red-500 text-[10px] font-bold tracking-widest uppercase">
+                <p className="text-red-500 text-[9px] font-bold tracking-tight uppercase">
                   {errors.email.message}
                 </p>
               )}
             </div>
 
             {/* Password Input */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               <label className="text-neutral-500 text-[10px] font-bold tracking-widest uppercase block">
-                ENCRYPTION_PHRASE
+                ACCESS_PHRASE
               </label>
-              <div className="relative group/input">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-600 group-focus-within/input:text-[#81ECFF] transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.778-7.778zM12 2L2 12"/>
-                  </svg>
-                </div>
-                <input
-                  {...register("password")}
-                  type="password"
-                  placeholder="••••••••••••"
-                  className="w-full bg-black border border-white/10 rounded-sm py-4 pl-12 pr-4 text-sm text-neutral-200 placeholder:text-neutral-700 focus:outline-none focus:border-[#81ECFF]/50 focus:ring-1 focus:ring-[#81ECFF]/20 transition-all font-mono"
-                  disabled={isLoading}
-                />
-              </div>
+              <input
+                {...register("password")}
+                type="password"
+                placeholder="••••••••••••"
+                className="w-full bg-black border border-white/10 rounded-sm py-3 px-4 text-sm text-neutral-200 placeholder:text-neutral-700 focus:outline-none focus:border-[#81ECFF]/50 transition-all font-mono"
+                disabled={isLoading}
+              />
               {errors.password && (
-                <p className="text-red-500 text-[10px] font-bold tracking-widest uppercase">
+                <p className="text-red-500 text-[9px] font-bold tracking-tight uppercase">
                   {errors.password.message}
                 </p>
               )}
@@ -145,7 +169,7 @@ export default function LoginPage() {
               className="w-full bg-[#81ECFF] hover:bg-white text-black font-black text-xs tracking-[0.2em] py-5 rounded-sm flex items-center justify-center gap-3 transition-colors uppercase disabled:opacity-50 disabled:cursor-not-allowed group/btn"
               type="submit"
             >
-              {isLoading ? "PROCESING..." : "VERIFY IDENTITY"}
+              {isLoading ? "INITIALIZING..." : "GENERATE IDENTITY"}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="group-hover/btn:translate-x-1 transition-transform">
                 <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
               </svg>
@@ -172,8 +196,8 @@ export default function LoginPage() {
 
           {/* Form Footer */}
           <div className="mt-10 pt-6 border-t border-white/5 flex items-center justify-between">
-            <Link href="/register" className="text-[10px] text-neutral-600 font-bold hover:text-[#81ECFF] transition-colors tracking-widest uppercase">
-              NEW IDENTITY? REGISTER
+            <Link href="/login" className="text-[10px] text-neutral-600 font-bold hover:text-[#81ECFF] transition-colors tracking-widest uppercase">
+              ALREADY REGISTERED? LOGIN
             </Link>
             <div className="flex items-center gap-2">
               <motion.div
