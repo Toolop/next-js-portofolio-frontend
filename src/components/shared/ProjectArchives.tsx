@@ -79,7 +79,7 @@ export default function ProjectArchives() {
   }, [workHistory]);
 
   return (
-    <section id="work-history" className="bg-[#020201] py-24 px-6 md:px-12">
+    <section id="work-history" className="bg-gradient-to-b from-[#020201] to-[#0a0a0a] relative py-24 px-6 md:px-12 z-10">
       <div className="max-w-6xl mx-auto">
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-white mb-2 tracking-tighter uppercase inline-block border-b-2 border-[#81ECFF] pb-1">
@@ -104,8 +104,6 @@ export default function ProjectArchives() {
         </div>
       </div>
 
-      {/* Spacer to allow scrolling the last item into the center */}
-      <div className="h-[40vh]" />
     </section>
   );
 }

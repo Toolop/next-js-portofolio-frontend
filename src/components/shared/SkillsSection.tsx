@@ -15,7 +15,7 @@ export default function SkillsSection() {
     <section id="skills" className="py-24 bg-gradient-to-b from-[#020201] to-[#0a0a0a] relative overflow-hidden">
       {/* Decorative background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-20"></div>
-      
+
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div className="flex justify-between items-end mb-16">
           <div>
@@ -40,7 +40,7 @@ export default function SkillsSection() {
             >
               {/* Card Hover Glow */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#81ECFF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
+
               <div className="relative z-10 space-y-8">
                 <div className="flex items-center gap-4">
                   <div className="h-px bg-gradient-to-r from-[#81ECFF] to-transparent w-8"></div>
@@ -48,7 +48,7 @@ export default function SkillsSection() {
                     {cat.category}
                   </h3>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-3">
                   {cat.items.map((item, itemIdx) => (
                     <motion.div
@@ -57,8 +57,8 @@ export default function SkillsSection() {
                       whileInView={{ opacity: 1, scale: 1 }}
                       transition={{ delay: (idx * 0.1) + (itemIdx * 0.05) }}
                       viewport={{ once: true }}
-                      whileHover={{ 
-                        scale: 1.05, 
+                      whileHover={{
+                        scale: 1.05,
                         backgroundColor: "rgba(129, 236, 255, 0.1)",
                         borderColor: "rgba(129, 236, 255, 0.5)",
                         color: "#ffffff"
@@ -70,7 +70,7 @@ export default function SkillsSection() {
                   ))}
                 </div>
               </div>
-              
+
               {/* Decorative Corner accents */}
               <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-[#81ECFF]/30 m-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-[#81ECFF]/30 m-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
