@@ -13,7 +13,8 @@ import {
   User,
   LogOut,
   Menu,
-  X
+  X,
+  FolderKanban,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -22,9 +23,7 @@ import { authService } from "@/services/auth";
 
 const navItems = [
   { name: "DASHBOARD", href: "/dashboard", icon: LayoutDashboard },
-  { name: "OPERATIONAL HISTORY", href: "/dashboard/history", icon: History },
-  { name: "TECHNICAL MATRIX", href: "/dashboard/matrix", icon: Database },
-  { name: "PROJECT ARCHIVES", href: "/dashboard/archives", icon: Archive },
+  { name: "PROJECT", href: "/dashboard/project", icon: FolderKanban },
 ];
 
 export default function DashboardLayout({
@@ -65,21 +64,29 @@ export default function DashboardLayout({
       <motion.aside
         initial={false}
         animate={{
-          width: isSidebarOpen ? 280 : 80,
-          x: typeof window !== 'undefined' && window.innerWidth < 768
-            ? (isMobileMenuOpen ? 0 : -280)
-            : 0
+          width: isSidebarOpen ? 260 : 80,
+          x:
+            typeof window !== "undefined" && window.innerWidth < 768
+              ? isMobileMenuOpen
+                ? 0
+                : -280
+              : 0,
         }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className={`bg-surface border-r border-white/5 h-full fixed md:relative z-50 flex flex-col transition-all ${!isSidebarOpen ? "md:w-20" : "md:w-[280px]"
-          }`}
+        className={`bg-surface border-r border-white/5 h-full fixed md:relative z-50 flex flex-col ${
+          !isSidebarOpen ? "md:w-20" : "md:w-[280px]"
+        }`}
       >
         {/* Sidebar Collapse Toggle (Floating Middle) - Desktop only */}
         <button
           onClick={toggleSidebar}
           className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-primary rounded-full items-center justify-center text-black shadow-lg z-50 hover:scale-110 transition-transform"
         >
-          {isSidebarOpen ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          {isSidebarOpen ? (
+            <ChevronLeft className="w-4 h-4" />
+          ) : (
+            <ChevronRight className="w-4 h-4" />
+          )}
         </button>
 
         {/* Sidebar Header */}
@@ -88,19 +95,27 @@ export default function DashboardLayout({
             <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center font-black text-black">
               EP
             </div>
-            {(isSidebarOpen || (typeof window !== 'undefined' && window.innerWidth < 768)) && (
+            {(isSidebarOpen ||
+              (typeof window !== "undefined" && window.innerWidth < 768)) && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="font-display font-black tracking-tighter"
               >
-                <div className="text-primary text-sm leading-none">EL PORTO</div>
-                <div className="text-[10px] text-neutral-500 leading-none mt-1">V1.0.0</div>
+                <div className="text-primary text-sm leading-none">
+                  EL PORTO
+                </div>
+                <div className="text-[10px] text-neutral-500 leading-none mt-1">
+                  V1.0.0
+                </div>
               </motion.div>
             )}
           </Link>
           {/* Close button for mobile */}
-          <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden text-neutral-500 hover:text-white">
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="md:hidden text-neutral-500 hover:text-white"
+          >
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -114,13 +129,18 @@ export default function DashboardLayout({
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center gap-4 p-3 rounded-sm transition-all group relative ${isActive
-                  ? "bg-surface-container-high text-primary"
-                  : "text-neutral-500 hover:text-white hover:bg-surface-container-low"
-                  }`}
+                className={`flex items-center gap-4 p-3 rounded-sm transition-all group relative ${
+                  isActive
+                    ? "bg-surface-container-high text-primary"
+                    : "text-neutral-500 hover:text-white hover:bg-surface-container-low"
+                }`}
               >
-                <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? "text-primary" : "group-hover:text-primary transition-colors"}`} />
-                {(isSidebarOpen || (typeof window !== 'undefined' && window.innerWidth < 768)) && (
+                <item.icon
+                  className={`w-5 h-5 flex-shrink-0 ${isActive ? "text-primary" : "group-hover:text-primary transition-colors"}`}
+                />
+                {(isSidebarOpen ||
+                  (typeof window !== "undefined" &&
+                    window.innerWidth < 768)) && (
                   <motion.span
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -142,7 +162,8 @@ export default function DashboardLayout({
 
         {/* Sidebar Footer - Informational only */}
         <div className="p-6 border-t border-white/5 opacity-50">
-          {(isSidebarOpen || (typeof window !== 'undefined' && window.innerWidth < 768)) && (
+          {(isSidebarOpen ||
+            (typeof window !== "undefined" && window.innerWidth < 768)) && (
             <div className="text-[8px] font-bold text-neutral-600 tracking-[0.3em] uppercase">
               ENGINE_STATUS: OPTIMAL
             </div>
@@ -163,7 +184,7 @@ export default function DashboardLayout({
               <Menu className="w-6 h-6" />
             </button>
             <h2 className="text-primary text-[10px] md:text-xs font-black tracking-widest uppercase truncate max-w-[150px] md:max-w-none">
-              {navItems.find(n => n.href === pathname)?.name || "DASHBOARD"}
+              {navItems.find((n) => n.href === pathname)?.name || "DASHBOARD"}
             </h2>
           </div>
 
@@ -202,8 +223,12 @@ export default function DashboardLayout({
                       className="absolute right-0 mt-2 w-48 bg-surface-container-high border border-white/10 rounded-sm shadow-2xl p-2 z-50 backdrop-blur-md"
                     >
                       <div className="px-4 py-2 border-b border-white/5 mb-2">
-                        <div className="text-[10px] font-black text-white truncate uppercase">ADMIN_USER</div>
-                        <div className="text-[8px] text-neutral-500 font-bold uppercase">System Operator</div>
+                        <div className="text-[10px] font-black text-white truncate uppercase">
+                          ADMIN_USER
+                        </div>
+                        <div className="text-[8px] text-neutral-500 font-bold uppercase">
+                          System Operator
+                        </div>
                       </div>
                       <button
                         onClick={handleLogout}
@@ -228,7 +253,10 @@ export default function DashboardLayout({
 
       {/* Global Click Handler to close user menu */}
       {isUserMenuOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} />
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsUserMenuOpen(false)}
+        />
       )}
     </div>
   );
