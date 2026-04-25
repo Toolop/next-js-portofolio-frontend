@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "HOME", href: "#home", id: "home" },
@@ -21,6 +22,7 @@ const COLORS = {
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,7 +33,6 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Track active section via IntersectionObserver
   useEffect(() => {
     const sectionIds = NAV_ITEMS.map((item) => item.id);
     const observers: IntersectionObserver[] = [];
@@ -56,16 +57,15 @@ export const Navbar = () => {
 
   return (
     <motion.header
-      className="fixed top-0 left-0 w-full z-50"
-      style={{ backgroundColor: COLORS.background }}
+      className="fixed top-0 left-0 w-full z-50 p-4 md:p-0"
       initial={false}
       animate={{
         paddingTop: isScrolled ? "16px" : "8px",
         paddingBottom: isScrolled ? "16px" : "8px",
+        backgroundColor: (isScrolled || isMobileMenuOpen) ? COLORS.background : "transparent",
       }}
-      transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ duration: 0.4 }}
     >
-      {/* Grid background overlay */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -74,119 +74,101 @@ export const Navbar = () => {
             linear-gradient(90deg, rgba(129,236,255,0.04) 1px, transparent 1px)
           `,
           backgroundSize: "48px 48px",
+          opacity: isScrolled ? 1 : 0
         }}
       />
 
-      <motion.nav
-        className="relative flex items-center justify-between mx-auto px-8"
-        animate={{
-          maxWidth: isScrolled ? "1400px" : "1280px",
-        }}
-        transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-      >
+      <nav className="relative flex items-center justify-between max-w-7xl mx-auto px-6 md:px-8">
         {/* Logo */}
-        <motion.div
-          animate={{ scale: isScrolled ? 1.05 : 1 }}
-          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+        <Link
+          href="/"
+          className="font-black tracking-[0.15em] text-lg lg:text-xl select-none relative z-50"
+          style={{ color: COLORS.primary }}
         >
-          <Link
-            href="/"
-            id="navbar-logo"
-            className="font-black tracking-[0.15em] text-lg select-none"
-            style={{ color: COLORS.primary, fontFamily: "var(--font-geist-sans)" }}
-          >
-            PORTOFOLIO
-          </Link>
-        </motion.div>
+          PORTOFOLIO
+        </Link>
 
-        {/* Nav pill */}
-        <motion.div
-          className="flex items-center rounded-full border"
-          style={{ borderColor: "rgba(129,236,255,0.18)" }}
-          animate={{
-            paddingLeft: isScrolled ? "32px" : "24px",
-            paddingRight: isScrolled ? "32px" : "24px",
-            paddingTop: isScrolled ? "12px" : "8px",
-            paddingBottom: isScrolled ? "12px" : "8px",
-            gap: isScrolled ? "36px" : "24px",
-            backgroundColor: isScrolled
-              ? "rgba(129,236,255,0.04)"
-              : "rgba(129,236,255,0)",
-            boxShadow: isScrolled
-              ? "0 0 24px rgba(129,236,255,0.06)"
-              : "none",
-          }}
-          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
+        {/* Desktop Nav Items */}
+        <div className="hidden md:flex items-center rounded-full border border-primary/20 bg-primary/5 backdrop-blur-md px-8 py-3 gap-8">
           {NAV_ITEMS.map((item) => {
             const isActive = activeSection === item.id;
             return (
               <Link
                 key={item.id}
                 href={item.href}
-                id={`navbar-link-${item.id}`}
-                className="relative text-xs font-semibold tracking-widest transition-colors duration-300 group"
-                style={{
-                  color: isActive ? COLORS.active : COLORS.inactive,
-                  letterSpacing: "0.12em",
-                }}
+                className="relative text-[10px] font-black tracking-[0.2em] transition-colors duration-300 group"
+                style={{ color: isActive ? COLORS.active : COLORS.inactive }}
                 onClick={() => setActiveSection(item.id)}
               >
                 {item.label}
-
-                {/* Active underline indicator */}
-                <AnimatePresence>
-                  {isActive && (
-                    <motion.span
-                      layoutId="nav-underline"
-                      className="absolute -bottom-1.5 left-0 right-0 h-px"
-                      style={{ backgroundColor: COLORS.primary }}
-                      initial={{ opacity: 0, scaleX: 0 }}
-                      animate={{ opacity: 1, scaleX: 1 }}
-                      exit={{ opacity: 0, scaleX: 0 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  )}
-                </AnimatePresence>
-
-                {/* Hover glow */}
-                <span
-                  className="absolute inset-0 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{
-                    background: `radial-gradient(ellipse at center, rgba(129,236,255,0.06) 0%, transparent 70%)`,
-                  }}
-                />
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-underline"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
+                  />
+                )}
               </Link>
             );
           })}
-        </motion.div>
+        </div>
 
-        {/* CTA Button */}
-        <motion.div
-          animate={{ scale: isScrolled ? 1.03 : 1 }}
-          transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+        {/* Desktop CTA */}
+        <Link
+          href="#contact"
+          className="hidden md:block border border-primary/40 px-6 py-2 rounded-full text-[10px] font-black tracking-widest text-primary hover:bg-primary/10 transition-all"
         >
-          <Link
-            href="#contact"
-            id="navbar-cta"
-            className="relative rounded-full border font-semibold text-xs tracking-widest overflow-hidden group transition-all duration-300"
-            style={{
-              color: COLORS.primary,
-              borderColor: "rgba(129,236,255,0.35)",
-              padding: isScrolled ? "12px 28px" : "8px 20px",
-              letterSpacing: "0.1em",
-            }}
-            onClick={() => setActiveSection("contact")}
+          GET IN TOUCH
+        </Link>
+
+        {/* Mobile Hamburger */}
+        <button 
+          className="md:hidden relative z-50 p-2 text-primary"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 bg-background pt-32 px-10 z-40 md:hidden"
           >
-            {/* Hover fill */}
-            <span
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              style={{ backgroundColor: "rgba(129,236,255,0.08)" }}
-            />
-            <span className="relative">GET IN TOUCH</span>
-          </Link>
-        </motion.div>
-      </motion.nav>
+            <div className="flex flex-col gap-8">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className="text-2xl font-black tracking-tighter"
+                  style={{ color: activeSection === item.id ? COLORS.primary : COLORS.inactive }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="text-primary/20 mr-4">/</span>
+                  {item.label}
+                </Link>
+              ))}
+              <Link
+                href="#contact"
+                className="mt-8 border border-primary/40 p-6 text-center text-primary font-black tracking-widest"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                GET IN TOUCH
+              </Link>
+            </div>
+            
+            <div className="absolute bottom-10 left-10 right-10 flex flex-col gap-4">
+               <div className="h-px bg-white/5 w-full" />
+               <div className="text-[10px] text-neutral-600 font-bold tracking-widest">
+                  © 2024 PORTFOLIO_V1.0
+               </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 };

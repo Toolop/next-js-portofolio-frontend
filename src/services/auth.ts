@@ -40,7 +40,8 @@ export const authService = {
       if (!response.ok) {
         return {
           success: false,
-          message: result.message || "Registration failed. Please check your data.",
+          message:
+            result.message || "Registration failed. Please check your data.",
         };
       }
 
@@ -53,7 +54,10 @@ export const authService = {
       console.error("Register Service Error:", error);
       return {
         success: false,
-        message: error instanceof TypeError ? "Connection error. Please check your internet." : "An unexpected error occurred.",
+        message:
+          error instanceof TypeError
+            ? "Connection error. Please check your internet."
+            : "An unexpected error occurred.",
       };
     }
   },
@@ -85,7 +89,10 @@ export const authService = {
       console.error("Login Service Error:", error);
       return {
         success: false,
-        message: error instanceof TypeError ? "Connection error. Please check your internet." : "An unexpected error occurred.",
+        message:
+          error instanceof TypeError
+            ? "Connection error. Please check your internet."
+            : "An unexpected error occurred.",
       };
     }
   },
@@ -93,5 +100,5 @@ export const authService = {
   async logout(): Promise<void> {
     // We'll implement a logout API route next turn to clear the cookie
     await fetch(`${AUTH_API_URL}/logout`, { method: "POST" });
-  }
+  },
 };
